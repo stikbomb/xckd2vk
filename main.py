@@ -34,7 +34,7 @@ def get_random_comics_url(current_number):
 
 def get_image_url_with_comment(comics_url):
 
-    url = '{}{}'.format(comics_url, 'info.0.json')
+    url = f'{comics_url}info.0.json'
     response = requests.get(url)
     response.raise_for_status()
     decoded_response = response.json()
@@ -85,12 +85,13 @@ def upload_photo_and_get_response(photo_path, upload_url):
 
     with open(photo_path, 'rb') as file:
         files = {
-            'photo': file,  # media — это имя поля данных, как указано в доке к API
+            'photo': file,
         }
         upload_photo_response = requests.post(upload_url, files=files)
-        upload_photo_response.raise_for_status()
-        decoded_response = upload_photo_response.json()
-        check_error_in_response(decoded_response)
+    upload_photo_response.raise_for_status()
+
+    decoded_response = upload_photo_response.json()
+    check_error_in_response(decoded_response)
 
     return decoded_response
 
@@ -106,6 +107,7 @@ def save_photo_and_return_attachments(token, api_version, group_id, upload_respo
 
     response = requests.post(url, params=payload)
     response.raise_for_status()
+
     decoded_response = response.json()
     check_error_in_response(decoded_response)
 
@@ -128,6 +130,7 @@ def post_photo(token, api_version, group_id, attachments, message):
 
     response = requests.get(url, params=payload)
     response.raise_for_status()
+
     decoded_response = response.json()
     check_error_in_response(decoded_response)
 
@@ -139,9 +142,6 @@ def delete_file(path):
         os.remove(path)
     except OSError as e:
         raise FileError(f"Error: {e.filename} - {e.strerror}")
-
-
-#https://oauth.vk.com/authorize?client_id=72312photos.saveWallPhoto50&display=page&scope=photos,groups,wall,offline&response_type=token&v=5.103&state=123456
 
 
 if __name__ == '__main__':
@@ -160,7 +160,7 @@ if __name__ == '__main__':
     image_url, image_comment = get_image_url_with_comment(comics_url).values()
     image_name = image_url.split('/')[-1]
 
-    path = f'./media/{image_name}'
+    path = f'./{image_name}'
 
     save_image(path, image_url)
 

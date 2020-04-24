@@ -13,7 +13,7 @@ class FileError(Exception):
     pass
 
 
-def get_current_number():
+def get_current_comics_number():
     url = "http://xkcd.com/info.0.json"
 
     response = requests.get(url)
@@ -88,6 +88,7 @@ def upload_photo_and_get_response(photo_path, upload_url):
             'photo': file,
         }
         upload_photo_response = requests.post(upload_url, files=files)
+
     upload_photo_response.raise_for_status()
 
     decoded_response = upload_photo_response.json()
@@ -148,14 +149,14 @@ if __name__ == '__main__':
 
     dotenv.load_dotenv()
 
-    vk_client_id = os.getenv('VK_CLIENT_ID')
     vk_access_token = os.getenv('VK_ACCESS_TOKEN')
     vk_api_version = os.getenv('VK_API_VERSION')
     vk_group_id = os.getenv('VK_GROUP_ID')
 
     vk_data = [vk_access_token, vk_api_version, vk_group_id]
 
-    comics_url = get_random_comics_url(get_current_number())
+    current_comics_number = get_current_comics_number()
+    comics_url = get_random_comics_url(current_comics_number)
 
     image_url, image_comment = get_image_url_with_comment(comics_url).values()
     image_name = image_url.split('/')[-1]

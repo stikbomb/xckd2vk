@@ -3,6 +3,7 @@ import random
 
 import requests
 import dotenv
+import glob
 
 
 class APIError(Exception):
@@ -145,7 +146,12 @@ def delete_file(path):
         raise FileError(f"Error: {e.filename} - {e.strerror}")
 
 
-if __name__ == '__main__':
+def delete_files(files):
+    for file in files:
+        delete_file(file)
+
+
+def main():
 
     dotenv.load_dotenv()
 
@@ -161,7 +167,7 @@ if __name__ == '__main__':
     image_url, image_comment = get_image_url_with_comment(comics_url).values()
     image_name = image_url.split('/')[-1]
 
-    path = f'./{image_name}'
+    path = f'./temp_{image_name}'
 
     save_image(path, image_url)
 
@@ -173,4 +179,12 @@ if __name__ == '__main__':
 
     post_photo(vk_access_token, vk_api_version, vk_group_id, attachments, image_comment)
 
-    delete_file(path)
+    # delete_file(path)
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    finally:
+        temp_files = glob.glob('./temp*')
+        delete_files(temp_files)

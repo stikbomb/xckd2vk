@@ -153,38 +153,37 @@ def delete_files(files):
 
 def main():
 
-    dotenv.load_dotenv()
-
-    vk_access_token = os.getenv('VK_ACCESS_TOKEN')
-    vk_api_version = os.getenv('VK_API_VERSION')
-    vk_group_id = os.getenv('VK_GROUP_ID')
-
-    vk_data = [vk_access_token, vk_api_version, vk_group_id]
-
-    current_comics_number = get_current_comics_number()
-    comics_url = get_random_comics_url(current_comics_number)
-
-    image_url, image_comment = get_image_url_with_comment(comics_url).values()
-    image_name = image_url.split('/')[-1]
-
-    path = f'./temp_{image_name}'
-
-    save_image(path, image_url)
-
-    upload_photo_url = get_upload_url(vk_data)
-
-    upload_photo_response = upload_photo_and_get_response(path, upload_photo_url)
-
-    attachments = save_photo_and_return_attachments(vk_access_token, vk_api_version, vk_group_id, upload_photo_response)
-
-    post_photo(vk_access_token, vk_api_version, vk_group_id, attachments, image_comment)
-
-    # delete_file(path)
-
-
-if __name__ == '__main__':
     try:
-        main()
+        dotenv.load_dotenv()
+
+        vk_access_token = os.getenv('VK_ACCESS_TOKEN')
+        vk_api_version = os.getenv('VK_API_VERSION')
+        vk_group_id = os.getenv('VK_GROUP_ID')
+
+        vk_data = [vk_access_token, vk_api_version, vk_group_id]
+
+        current_comics_number = get_current_comics_number()
+        comics_url = get_random_comics_url(current_comics_number)
+
+        image_url, image_comment = get_image_url_with_comment(comics_url).values()
+        image_name = image_url.split('/')[-1]
+
+        path = f'./temp_{image_name}'
+
+        save_image(path, image_url)
+
+        upload_photo_url = get_upload_url(vk_data)
+
+        upload_photo_response = upload_photo_and_get_response(path, upload_photo_url)
+
+        attachments = save_photo_and_return_attachments(vk_access_token, vk_api_version, vk_group_id, upload_photo_response)
+
+        post_photo(vk_access_token, vk_api_version, vk_group_id, attachments, image_comment)
+
     finally:
         temp_files = glob.glob('./temp*')
         delete_files(temp_files)
+
+
+if __name__ == '__main__':
+    main()
